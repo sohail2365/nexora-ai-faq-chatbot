@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FAQ Chatbot - Nexora AI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .chat-container {
+            width: 400px;
+            max-width: 90%;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .chat-header {
+            background-color: #075E54;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .chat-body {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        .message {
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 75%;
+            word-wrap: break-word;
+        }
+        .user-msg {
+            background-color: #DCF8C6;
+            align-self: flex-end;
+        }
+        .bot-msg {
+            background-color: #ECE5DD;
+            align-self: flex-start;
+        }
+        .chat-footer {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ccc;
+        }
+        .chat-footer input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+        .chat-footer button {
+            margin-left: 10px;
+            padding: 10px 15px;
+            background-color: #075E54;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            Nexora AI FAQ Chatbot
+        </div>
+        <div class="chat-body" id="chat-body">
+            <!-- Messages will appear here -->
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="msg" placeholder="Type your question..." />
+            <button onclick="send()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        async function send() {
+            let input = document.getElementById("msg");
+            let msg = input.value.trim();
+            if(msg === "") return;
+
+            // Display user message
+            let chatBody = document.getElementById("chat-body");
+            let userBubble = document.createElement("div");
+            userBubble.className = "message user-msg";
+            userBubble.innerText = msg;
+            chatBody.appendChild(userBubble);
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            input.value = "";
+
+            // Send to backend
+            let res = await fetch("/chat", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({message: msg})
+            });
+
+            let data = await res.json();
+
+            // Display bot message
+            let botBubble = document.createElement("div");
+            botBubble.className = "message bot-msg";
+            botBubble.innerText = data.answer;
+            chatBody.appendChild(botBubble);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+    </script>
+</body>
+</html>
