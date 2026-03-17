@@ -3,6 +3,3 @@ fastapi
 uvicorn
 python-dotenv
 jinja2
-sentence-transformers
-faiss-cpu
-numpy
