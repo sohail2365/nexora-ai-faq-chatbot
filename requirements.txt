@@ -1,6 +1,5 @@
 groq
 fastapi
-os
 uvicorn
 python-dotenv
 jinja2
